@@ -1,34 +1,31 @@
-const buttonRef = document.querySelector("#btn-translate");
-const textInputRef = document.querySelector("#txt-input");
-const textOutputRef = document.querySelector("#txt-output");
+var btnTranslate = document.querySelector("#btn-translate")
+var txtInput = document.querySelector("#input-txt")
+var outputDiv = document.querySelector("#output")
 
-const url = `https://api.funtranslations.com/translate/minion.json`;
+var serverURL = "https://api.funtranslations.com/translate/minion.json"
 
-const generateUrl = text => {
-
-    const temp = `${url}?text=${text}`;
-    return encodeURI(temp);
+function getTranslationURL(text)
+{
+  return serverURL + "?" + "text=" + text;
 }
 
-const errorHandler = error => {
-
-    console.log(`Some error occured!`);
-    console.log(error);
-    alert(`Some error occured! Please try after some time.`)
+function errorHandler(error)
+{
+  console.log("error occured", error);
+  alert("Something went wrong so please try again after sometime.")
 }
 
-const clickEventHandler = async () => {
-    
-    const textInput = textInputRef.value;
-    
-    try{
-    const res = await fetch(generateUrl(textInput));
-    const json = await res.json();
-    textOutputRef.innerText = json.contents.translated;
-   }
-   catch (err) {
-    errorHandler(err);
-   }
-}
+function clickHandler()
+{
+  var inputText = txtInput.value;
 
-buttonRef.addEventListener("click", clickEventHandler);
+  fetch(getTranslationURL(inputText)).then(response => response.json()).then(json => {
+    var translatedText = json.contents.translated;
+    outputDiv.innerText = translatedText;
+
+  })
+ 
+   .catch(errorHandler)
+};
+
+btnTranslate.addEventListener("click", clickHandler)
